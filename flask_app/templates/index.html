@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Crypto Market Pipeline</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,400..800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <h1>Crypto Market Pipeline</h1>
+      <p class="sub">Live CoinGecko data, stored in Cassandra by Spark, read by Flask</p>
+    </div>
+    <ol class="flow" aria-label="Pipeline stages">
+      <li>CoinGecko</li><li>Kafka</li><li>Spark</li><li>Cassandra</li><li>Flask</li>
+    </ol>
+    <p class="status" id="status" role="status">Connecting to Cassandra at {{ host }}</p>
+  </header>
+
+  <div class="ticker" aria-label="Latest stored prices">
+    <div class="ticker-track" id="ticker"></div>
+  </div>
+
+  <main>
+    <section class="market" aria-labelledby="market-h">
+      <h2 id="market-h">Whole market</h2>
+      <dl class="stats" id="stats">
+        <div><dt>Total market cap</dt><dd id="s-cap">-</dd></div>
+        <div><dt>24h volume</dt><dd id="s-vol">-</dd></div>
+        <div><dt>BTC dominance</dt><dd id="s-btc">-</dd></div>
+        <div><dt>ETH dominance</dt><dd id="s-eth">-</dd></div>
+        <div><dt>24h change</dt><dd id="s-chg">-</dd></div>
+        <div><dt>Sentiment</dt><dd id="s-sent">-</dd></div>
+      </dl>
+    </section>
+
+    <div class="grid">
+      <section aria-labelledby="latest-h">
+        <div class="sec-head">
+          <h2 id="latest-h">Latest price per coin</h2>
+          <span class="meta" id="latest-meta"></span>
+        </div>
+        <div class="scroll">
+          <table>
+            <thead><tr>
+              <th>#</th><th class="l">Coin</th><th>Price (USD)</th><th>24h</th>
+              <th>24h high</th><th>24h low</th><th>Volatility</th><th>Volume (USD)</th><th>Market cap (USD)</th>
+            </tr></thead>
+            <tbody id="latest"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <section aria-labelledby="global-h">
+        <div class="sec-head">
+          <h2 id="global-h">Market snapshots</h2>
+          <span class="meta" id="global-meta"></span>
+        </div>
+        <div class="scroll">
+          <table>
+            <thead><tr><th class="l">Captured</th><th>Market cap</th><th>BTC dom.</th><th>24h</th><th class="l">Sentiment</th></tr></thead>
+            <tbody id="global"></tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+
+    <section aria-labelledby="records-h">
+      <div class="sec-head">
+        <h2 id="records-h">Stored records: crypto_pipeline.market_prices</h2>
+        <span class="meta" id="records-meta"></span>
+      </div>
+      <div class="scroll tall">
+        <table>
+          <thead><tr>
+            <th class="l">Captured</th><th class="l">Processed by Spark</th><th class="l">Coin</th>
+            <th>Price (USD)</th><th>24h</th><th class="l">Trend</th><th class="l">Partition</th>
+          </tr></thead>
+          <tbody id="records"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>Refreshes every 10 seconds from Cassandra. Times shown in your local time zone.</p>
+  </footer>
+
+  <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,3 @@
+# Records are filed under their UTC Capture Day
+
+Both Cassandra tables use the UTC calendar day of the Capture Time as their partition key, so all of one day's records can be read newest-first in a single query. We chose UTC over Philippine time (UTC+8), where the team works, because every stage of the pipeline already records time in UTC (the producers, Kafka messages, Spark and cqlsh). Using one clock means a record never appears under two different dates. The trade-off is that before 08:00 local time the Capture Day is still the previous date, so cqlsh queries must use the UTC date, and the Flask page reads both today and yesterday.
